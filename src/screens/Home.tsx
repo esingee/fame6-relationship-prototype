@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeftRight, Bell, CalendarClock, Plus, ChevronRight, CreditCard, Eye, EyeOff, Landmark, Lightbulb, Headset, Megaphone, MoreHorizontal, PiggyBank, ReceiptText, ScanLine, Send, User } from 'lucide-react';
+import { ArrowLeftRight, HandCoins, LineChart, TrendingUp, Vault, Wallet, Bell, CalendarClock, Plus, ChevronRight, CreditCard, Eye, EyeOff, Landmark, Lightbulb, Headset, Megaphone, MoreHorizontal, PiggyBank, ReceiptText, ScanLine, Send, User } from 'lucide-react';
 import { Screen, Logo } from '../components/Shell';
 import { BottomSheet, Card, useToast } from '../components/ui';
 import { useDemo } from '../state/useDemoState';
@@ -14,13 +14,13 @@ const GOLD = [
 
 const TILES: { label: string; bg: string; to?: string; icon?: typeof Send }[] = [
   { label: 'Customer Service', bg: 'bg-[#4E6B4A]', to: '/service', icon: Headset },
-  { label: 'My Networth', bg: 'bg-[#23252B]' },
-  { label: 'Payments', bg: 'bg-[#C99A1B]' },
-  { label: 'Credit Cards', bg: 'bg-[#2F4FB8]' },
-  { label: 'Savings', bg: 'bg-[#B5262B]' },
-  { label: 'Loans', bg: 'bg-[#2478B5]' },
-  { label: 'Deposits', bg: 'bg-[#5B2C8F]' },
-  { label: 'Mutual Funds', bg: 'bg-[#3C3F46]' },
+  { label: 'My Networth', bg: 'bg-[#23252B]', icon: LineChart },
+  { label: 'Payments', bg: 'bg-[#C99A1B]', icon: Wallet },
+  { label: 'Credit Cards', bg: 'bg-[#2F4FB8]', icon: CreditCard },
+  { label: 'Savings', bg: 'bg-[#B5262B]', icon: PiggyBank },
+  { label: 'Loans', bg: 'bg-[#2478B5]', icon: HandCoins },
+  { label: 'Deposits', bg: 'bg-[#5B2C8F]', icon: Vault },
+  { label: 'Mutual Funds', bg: 'bg-[#3C3F46]', icon: TrendingUp },
 ];
 
 const QUICK: { key: StringKey; icon: typeof Send }[] = [
