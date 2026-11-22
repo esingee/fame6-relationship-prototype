@@ -4,7 +4,7 @@
 
 :root { --brand-primary:#9C1D27; --brand-dark:#6E1219; --brand-accent:#C8A15A; --bg:#FAF7F5; }
 html, body, #root { height: 100%; }
-body { margin: 0; background: #2b2b2b; font-family: Inter, system-ui, -apple-system, sans-serif; color: #1F1F1F; font-size: 16px; }
+body { margin: 0; background: #2b2b2b; font-family: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, sans-serif; color: #1F1F1F; font-size: 14px; line-height: 1.5; }
 button { font-family: inherit; }
 .scroll-area { overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
 .scroll-area::-webkit-scrollbar { width: 0; }

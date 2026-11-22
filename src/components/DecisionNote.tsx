@@ -42,7 +42,7 @@ export function DecisionNote({ idea }: { idea: Idea }) {
 function Block({ h, text }: { h: string; text: string }) {
   return (
     <div>
-      <p className="text-[16px] font-semibold text-ink">{h}</p>
+      <p className="text-[15px] font-semibold text-ink">{h}</p>
       <p className="mt-0.5 leading-relaxed">{text}</p>
     </div>
   );

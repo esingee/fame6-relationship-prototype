@@ -47,14 +47,14 @@ export default function Home() {
       </header>
 
       <Screen nav className="bg-white pb-5">
-        <p className="px-4 pb-3 pt-1 text-[19px] font-semibold text-ink">{t('greeting')}</p>
+        <p className="px-4 pb-3 pt-1 text-[17px] font-semibold text-ink">{t('greeting')}</p>
 
         <div className="px-4">
           <div className="rounded-2xl bg-gradient-to-br from-[#B3222B] to-[#8F161D] p-4 pb-9 text-white shadow-card">
             <p className="text-[12px] font-semibold uppercase tracking-wider text-[#F6C9CC]">{t('home.savings')} · XXXX 4821</p>
             <p className="mt-3 text-sm text-white/90">Available balance</p>
             <div className="flex items-center gap-1">
-              <p className="text-[28px] font-bold tracking-tight">{show ? '₹48,250.00' : '₹ ••••••'}</p>
+              <p className="text-[26px] font-bold tracking-tight">{show ? '₹48,250.00' : '₹ ••••••'}</p>
               <button type="button" aria-label={show ? 'Hide balance' : 'Show balance'} onClick={() => setShow((v) => !v)} className="flex h-11 w-11 items-center justify-center rounded-full text-white/90">
                 {show ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>

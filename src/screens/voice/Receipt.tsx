@@ -24,18 +24,18 @@ export default function Receipt() {
           <span className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-ok text-white">
             <Check size={44} strokeWidth={3} />
           </span>
-          <h1 className="mt-3 text-[26px] font-semibold text-brand-dark">We heard you.</h1>
+          <h1 className="mt-3 text-[22px] font-semibold text-brand-dark">We heard you.</h1>
           <p className="mt-1 text-ink-soft">Idea ID: <span className="font-mono font-semibold text-ink">{idea.code}</span></p>
         </div>
 
         <Card>
-          <p className="text-[16px] font-semibold text-ink">What we recorded</p>
+          <p className="text-[15px] font-semibold text-ink">What we recorded</p>
           <p className="mt-1 leading-relaxed">{idea.title}</p>
           <p className="mt-1 text-sm text-ink-soft">Category: {idea.category}{idea.voiceNote ? ' · Voice note (0:14) attached' : ''}{idea.language ? ` · Updates in ${idea.language}` : ''}</p>
         </Card>
 
         <Card>
-          <p className="text-[16px] font-semibold text-ink">What happens next</p>
+          <p className="text-[15px] font-semibold text-ink">What happens next</p>
           <p className="mt-1 leading-relaxed">We’ll decide whether to take this forward within 30 days and tell you why, either way.</p>
         </Card>
 

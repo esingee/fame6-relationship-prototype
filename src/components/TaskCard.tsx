@@ -8,7 +8,7 @@ const TONE: Record<TaskStatus, Tone> = { todo: 'grey', done: 'ok', need_help: 'w
 export function TaskCard({ n, task, onOpen, onMenu }: { n: number; task: MomentTask; onOpen: () => void; onMenu: () => void }) {
   const off = task.status === 'not_relevant';
   return (
-    <div className={`flex items-stretch rounded-2xl bg-white shadow-card ${off ? 'opacity-60' : ''}`}>
+    <div className={`flex items-stretch border-b border-gray-100 ${off ? 'opacity-60' : ''}`}>
       <button type="button" onClick={onOpen} className="flex min-h-[64px] flex-1 items-start gap-3 p-4 text-left">
         <span className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold ${task.status === 'done' ? 'bg-ok text-white' : 'bg-brand-tint text-brand-dark'}`}>{task.status === 'done' ? '✓' : n}</span>
         <span className="min-w-0 flex-1">

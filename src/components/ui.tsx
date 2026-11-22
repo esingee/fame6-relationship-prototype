@@ -27,7 +27,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 /* ---------- Button ---------- */
 type BtnProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'primary' | 'outline' | 'ghost' | 'quiet'; full?: boolean };
 export function Button({ variant = 'primary', full, className = '', ...p }: BtnProps) {
-  const base = 'inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-4 text-[15px] font-semibold transition active:scale-[0.98] disabled:opacity-50';
+  const base = 'inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-4 text-[14px] font-semibold transition active:scale-[0.98] disabled:opacity-50';
   const v = {
     primary: 'bg-brand text-white active:bg-brand-dark',
     outline: 'border border-brand bg-white text-brand active:bg-brand-tint',
@@ -61,6 +61,16 @@ export function Chip({ tone = 'grey', children, className = '' }: { tone?: Tone;
   return <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${chipTone[tone]} ${className}`}>{children}</span>;
 }
 
+/* ---------- Flat list row (reference style: no box, hairline divider) ---------- */
+export function Row({ children, onClick, className = '' }: { children: ReactNode; onClick?: () => void; className?: string }) {
+  const cls = `block w-full border-b border-gray-100 py-4 text-left last:border-0 ${className}`;
+  return onClick ? (
+    <button type="button" onClick={onClick} className={`${cls} min-h-[44px] active:bg-gray-50`}>{children}</button>
+  ) : (
+    <div className={cls}>{children}</div>
+  );
+}
+
 /* ---------- BottomSheet (positioned inside the phone frame) ---------- */
 export function BottomSheet({ open, onClose, title, children }: { open: boolean; onClose: () => void; title?: string; children: ReactNode }) {
   if (!open) return null;
@@ -87,7 +97,7 @@ export function AppHeader({ title, back, right }: { title: string; back?: string
       <button type="button" aria-label="Go back" onClick={() => (back ? nav(back) : nav(-1))} className="flex h-11 w-11 items-center justify-center rounded-full text-ink active:bg-gray-100">
         <ChevronLeft size={24} />
       </button>
-      <h1 className="flex-1 truncate text-[17px] font-semibold">{title}</h1>
+      <h1 className="flex-1 truncate text-[15px] font-semibold">{title}</h1>
       {right}
     </header>
   );
@@ -136,7 +146,7 @@ export function Timeline({ items }: { items: { at: string; label: string; by: 'c
       {items.map((it, i) => (
         <li key={i} className="relative pb-4 pl-5 last:pb-0">
           <span className={`absolute -left-[7px] top-1.5 h-3 w-3 rounded-full border-2 border-white ${it.by === 'customer' ? 'bg-brand-accent' : 'bg-brand'}`} />
-          <p className="text-[15px] font-medium leading-snug">
+          <p className="text-[14px] font-medium leading-snug">
             {it.label}
             {it.channel && <span className="font-normal text-ink-soft"> ({cap(it.channel)})</span>}
           </p>

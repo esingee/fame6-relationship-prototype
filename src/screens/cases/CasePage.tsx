@@ -10,10 +10,10 @@ const SLOTS = ['Today, 6 to 8 pm', 'Tomorrow, 10 am to 12 pm', 'Tomorrow, 4 to 6
 
 function Section({ title, children, tone }: { title: string; children: ReactNode; tone?: 'warn' }) {
   return (
-    <Card className={tone === 'warn' ? '!bg-warn-tint ring-1 ring-warn/30' : ''}>
-      <h2 className={`mb-1.5 text-[16px] font-semibold ${tone === 'warn' ? 'text-warn' : 'text-ink'}`}>{title}</h2>
+    <section className={tone === 'warn' ? 'rounded-2xl bg-warn-tint p-4' : 'border-b border-gray-100 pb-4'}>
+      <h2 className={`mb-1.5 text-[15px] font-semibold ${tone === 'warn' ? 'text-warn' : 'text-ink'}`}>{title}</h2>
       {children}
-    </Card>
+    </section>
   );
 }
 
@@ -41,16 +41,16 @@ export default function CasePage() {
   return (
     <>
       <AppHeader title="Your Request" back="/requests" />
-      <Screen className="space-y-3 px-4 py-4">
-        <Card>
-          <h1 className="text-[20px] font-semibold leading-snug text-brand-dark">{titleCase(c.title)}</h1>
+      <Screen className="space-y-4 px-4 py-4">
+        <div className="border-b border-gray-100 pb-4">
+          <h1 className="text-[18px] font-semibold leading-snug text-brand-dark">{titleCase(c.title)}</h1>
           <p className="mt-1 text-sm text-ink-soft">
             Case ID <span className="font-mono font-semibold text-ink">{c.caseNo}</span> · Raised {c.raisedOn} via {c.raisedVia}
           </p>
           <div className="mt-2.5">
             <Chip tone={statusTone(c.status)}>{titleCase(c.statusLabel)}</Chip>
           </div>
-        </Card>
+        </div>
 
         <Section title="What You Told Us">
           <p className="leading-relaxed">{c.toldUs}</p>

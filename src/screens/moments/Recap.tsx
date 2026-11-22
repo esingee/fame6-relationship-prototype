@@ -24,7 +24,7 @@ export default function Recap() {
       <Screen className="space-y-3 px-4 py-6">
         <div className="text-center">
           <span className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-ok text-white"><Check size={44} strokeWidth={3} /></span>
-          <h1 className="mt-3 text-[24px] font-semibold text-brand-dark">{m.id === 'moving' ? 'You’re all set for your move.' : 'You’re all set for this new chapter.'}</h1>
+          <h1 className="mt-3 text-[21px] font-semibold text-brand-dark">{m.id === 'moving' ? 'You’re all set for your move.' : 'You’re all set for this new chapter.'}</h1>
         </div>
 
         <Card>
@@ -56,7 +56,7 @@ export default function Recap() {
 function List({ title, items, empty, tone }: { title: string; items: string[]; empty?: string; tone?: 'warn' }) {
   return (
     <div className="mb-3 last:mb-0">
-      <p className={`text-[16px] font-semibold ${tone === 'warn' ? 'text-warn' : 'text-ink'}`}>{title}</p>
+      <p className={`text-[15px] font-semibold ${tone === 'warn' ? 'text-warn' : 'text-ink'}`}>{title}</p>
       {items.length ? <ul className="mt-1 list-disc space-y-0.5 pl-5">{items.map((i) => <li key={i}>{i}</li>)}</ul> : empty && <p className="mt-1 text-sm text-ink-soft">{empty}</p>}
     </div>
   );

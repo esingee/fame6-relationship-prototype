@@ -30,7 +30,7 @@ export default function SignIn() {
             signIn();
           }}
         >
-          <h1 className="text-center text-[24px] font-bold">{t('signin.welcome')}</h1>
+          <h1 className="text-center text-[21px] font-bold">{t('signin.welcome')}</h1>
           <p className="mt-1 text-center text-sm text-white/90">Let’s get started</p>
 
           <fieldset className="mt-8 rounded-xl border-2 border-white/90 px-4 pb-2 pt-0 focus-within:border-white">
@@ -43,7 +43,7 @@ export default function SignIn() {
             </div>
           </fieldset>
 
-          <button type="submit" className="mx-auto mt-8 min-h-[52px] w-3/4 rounded-full bg-white text-[16px] font-semibold text-brand-dark shadow-lg active:scale-[0.98]">
+          <button type="submit" className="mx-auto mt-8 min-h-[52px] w-3/4 rounded-full bg-white text-[15px] font-semibold text-brand-dark shadow-lg active:scale-[0.98]">
             Sign In
           </button>
           <p className="mt-4 text-center text-sm font-medium text-white/95">Demo sign-in. Any number works. No OTP or PIN is used.</p>

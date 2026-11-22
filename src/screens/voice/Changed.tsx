@@ -1,4 +1,4 @@
-import { AppHeader, Card, Chip } from '../../components/ui';
+import { AppHeader, Row, Chip } from '../../components/ui';
 import { Screen } from '../../components/Shell';
 import { Megaphone } from 'lucide-react';
 import { useDemo } from '../../state/useDemoState';
@@ -14,10 +14,10 @@ export default function Changed() {
   return (
     <>
       <AppHeader title={t('voice.changed')} back="/voice" />
-      <Screen nav className="space-y-3 px-4 py-4">
+      <Screen nav className="px-4 py-3">
         <p className="text-sm text-ink-soft">This month’s digest. Three changes, made because customers asked.</p>
         {CARDS.map((c) => (
-          <Card key={c.ask}>
+          <Row key={c.ask}>
             <div className="flex gap-3">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-accent/25 text-brand-dark"><Megaphone size={19} /></span>
               <div>
@@ -26,7 +26,7 @@ export default function Changed() {
                 <Chip tone="brand" className="mt-2.5">Asked by {c.n.toLocaleString('en-IN')} customers</Chip>
               </div>
             </div>
-          </Card>
+          </Row>
         ))}
       </Screen>
     </>
