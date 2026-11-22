@@ -37,11 +37,11 @@ export function BoardCard({ idea, rising }: { idea: Idea; rising?: boolean }) {
       <button type="button" onClick={() => nav(`/voice/ideas/${idea.id}`)} className="min-h-[44px] min-w-0 flex-1 text-left">
         <p className="font-semibold leading-snug">{idea.title}</p>
         <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
-          <Chip tone={chip.tone}>{chip.label}</Chip>
+          {idea.stage !== 'heard' && <Chip tone={chip.tone}>{chip.label}</Chip>}
           {n < 25 ? <Chip tone="brand">New</Chip> : <span className="text-xs text-ink-soft">{fmtCount(n)}</span>}
           {rising && <span className="text-xs font-semibold text-ok">+{idea.supportersLast30} this month</span>}
         </div>
-        <p className="mt-1 text-xs text-ink-soft">Decision by {fmtDate(idea.decisionBy)}</p>
+        {idea.stage !== 'heard' && <p className="mt-1 text-xs text-ink-soft">Decision by {fmtDate(idea.decisionBy)}</p>}
       </button>
       <SupportButton idea={idea} />
     </div>

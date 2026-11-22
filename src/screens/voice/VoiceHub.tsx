@@ -60,9 +60,9 @@ export default function VoiceHub() {
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand"><Lightbulb size={19} /></span>
               <span className="min-w-0 flex-1">
                 <span className="block font-semibold leading-snug">{i.title}</span>
-                <span className="block text-xs text-ink-soft">{fmtCount(supportCount(i))} agree{i.decision ? '' : ` · Decision by ${fmtDate(i.decisionBy)}`}</span>
+                <span className="block text-xs text-ink-soft">{fmtCount(supportCount(i))} agree{i.decision || i.stage === 'heard' ? '' : ` · Decision by ${fmtDate(i.decisionBy)}`}</span>
               </span>
-              <Chip tone={c.tone} className="shrink-0">{c.label.replace('Decision Published: ', '')}</Chip>
+              {i.stage !== 'heard' && <Chip tone={c.tone} className="shrink-0">{c.label.replace('Decision Published: ', '')}</Chip>}
             </button>
           );
         })}
@@ -99,8 +99,7 @@ export default function VoiceHub() {
         )}
 
         <section className="mt-6" aria-labelledby="board">
-          <h2 id="board" className="text-[16px] font-semibold">Idea Board</h2>
-          <p className="mb-2 text-sm leading-snug text-ink-soft">Support shows us demand. Decisions also weigh safety, rules and cost. Every idea gets an answer.</p>
+          <h2 id="board" className="mb-2 text-[16px] font-semibold">Idea Board</h2>
           <div role="tablist" aria-label="Idea board" className="flex overflow-hidden rounded-xl border border-gray-200">
             {TABS.map((x) => (
               <button key={x.id} type="button" role="tab" aria-selected={tab === x.id} onClick={() => setTab(x.id)} className={`min-h-[44px] flex-1 px-1 text-[12.5px] font-semibold ${tab === x.id ? 'bg-brand text-white' : 'bg-white text-ink-soft'}`}>
