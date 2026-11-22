@@ -37,6 +37,11 @@ const seed = (): Persisted => ({
 
 const load = (): Persisted => {
   try {
+    // Saved state from an older deploy would hide new demo data, so drop it once per build.
+    if (localStorage.getItem(KEY + '-build') !== __BUILD_ID__) {
+      localStorage.removeItem(KEY);
+      localStorage.setItem(KEY + '-build', __BUILD_ID__);
+    }
     const raw = localStorage.getItem(KEY);
     if (raw) return { ...seed(), ...JSON.parse(raw) };
   } catch {
