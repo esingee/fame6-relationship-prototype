@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import { AppHeader, Card, Chip, type Tone } from '../../components/ui';
+import { AppHeader, Card, type Tone } from '../../components/ui';
 import { Screen } from '../../components/Shell';
 import { useDemo } from '../../state/useDemoState';
 import type { Case } from '../../data/types';
@@ -17,18 +17,18 @@ export default function RequestsList() {
         <p className="text-sm text-ink-soft">Everything you have asked us for, in one place, in plain words.</p>
         {cases.map((c) => (
           <Card key={c.id} onClick={() => nav(`/requests/${c.id}`)}>
-            <div className="flex items-start gap-2">
+            <div className="flex items-start gap-3">
               <div className="min-w-0 flex-1">
-                <p className="text-[13px] text-ink-soft">{c.product}</p>
+                <p className="text-xs text-ink-soft">ID: {c.caseNo} · {c.product}</p>
                 <p className="mt-0.5 font-semibold leading-snug">{c.title}</p>
+                <p className="mt-1 text-xs text-ink-soft">Raised on {c.raisedOn} 2026 via {c.raisedVia}</p>
               </div>
-              <ChevronRight size={20} className="mt-1 shrink-0 text-ink-soft" />
+              <span className={`shrink-0 rounded-md border px-2 py-1 text-xs font-medium ${c.status === 'resolved' ? 'border-indigo-300 bg-indigo-50 text-indigo-800' : c.status === 'waiting' ? 'border-warn/50 bg-warn-tint text-warn' : 'border-info/40 bg-info-tint text-info'}`}>{c.statusLabel}</span>
             </div>
-            <div className="mt-2.5 flex flex-wrap items-center gap-2">
-              <Chip tone={statusTone(c.status)}>{c.statusLabel}</Chip>
-              <span className="text-sm text-ink-soft">{c.status === 'resolved' ? `Closed ${c.closedOn}` : `Next update by ${c.nextUpdateBy}`}</span>
+            <div className="mt-2.5 flex items-center justify-between">
+              <span className="text-sm font-medium text-brand-dark">{c.status === 'resolved' ? `Closed ${c.closedOn}` : `Next update by ${c.nextUpdateBy}`}</span>
+              <ChevronRight size={18} className="text-ink-soft" />
             </div>
-            <p className="mt-1.5 text-xs text-ink-soft">Raised via {c.raisedVia}</p>
           </Card>
         ))}
       </Screen>

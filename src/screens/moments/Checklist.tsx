@@ -32,10 +32,10 @@ export default function Checklist() {
   return (
     <>
       <AppHeader title={m.title} back="/moments" />
-      <div className="shrink-0 bg-brand px-4 pb-4 pt-1 text-white">
-        <ProgressMeter done={done} total={active.length} label={`${done} of ${active.length} done`} />
-      </div>
       <Screen className="space-y-3 px-4 py-4">
+        <div className="rounded-2xl bg-gradient-to-br from-[#B3222B] to-[#8F161D] p-4 text-white shadow-card">
+          <ProgressMeter done={done} total={active.length} label={`${done} of ${active.length} done`} />
+        </div>
         <div className="flex items-center gap-3 rounded-2xl bg-white p-3 shadow-card">
           <div className="flex-1">
             <p className="font-semibold">Remind me once in 3 days</p>

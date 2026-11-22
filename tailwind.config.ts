@@ -6,7 +6,8 @@ export default {
     extend: {
       colors: {
         brand: { DEFAULT: '#9C1D27', dark: '#6E1219', accent: '#C8A15A', tint: '#F8E9EA' },
-        app: '#FAF7F5',
+        app: '#F8F6F5',
+        gold: '#E9B83C',
         ink: { DEFAULT: '#1F1F1F', soft: '#5E5E5E' },
         ok: { DEFAULT: '#2E7D4F', tint: '#E4F2EA' },
         info: { DEFAULT: '#2B5DAA', tint: '#E5EDF8' },

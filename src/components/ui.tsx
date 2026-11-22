@@ -83,11 +83,11 @@ export function BottomSheet({ open, onClose, title, children }: { open: boolean;
 export function AppHeader({ title, back, right }: { title: string; back?: string; right?: ReactNode }) {
   const nav = useNavigate();
   return (
-    <header className="flex shrink-0 items-center gap-1 bg-brand px-2 py-2 text-white">
-      <button type="button" aria-label="Go back" onClick={() => (back ? nav(back) : nav(-1))} className="flex h-11 w-11 items-center justify-center rounded-full active:bg-white/10">
+    <header className="flex shrink-0 items-center gap-1 bg-white px-2 py-2 text-ink shadow-[0_1px_0_rgba(0,0,0,0.06)]">
+      <button type="button" aria-label="Go back" onClick={() => (back ? nav(back) : nav(-1))} className="flex h-11 w-11 items-center justify-center rounded-full text-ink active:bg-gray-100">
         <ChevronLeft size={24} />
       </button>
-      <h1 className="flex-1 truncate text-lg font-semibold">{title}</h1>
+      <h1 className="flex-1 truncate text-[17px] font-semibold">{title}</h1>
       {right}
     </header>
   );

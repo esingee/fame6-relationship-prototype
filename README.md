@@ -27,7 +27,7 @@ Open the launcher at `/` and use **Reset Demo** to return to the seeded state at
 ## Add the logo and the reference screenshot
 
 - **Logo:** drop your file at `public/logo.png`. It is used on sign-in and home. If the file is missing, a text wordmark is shown instead. (A logo with a transparent or white background works best, as it sits on a white bar.)
-- **Reference screenshot:** put a screenshot of the real app's home screen in `reference/`. Until then, the home and sign-in screens follow the written brief (sections 6.1 and 6.1a), so after adding it, compare and adjust colours (`tailwind.config.ts`, `src/styles/index.css`), the header and the quick-action icons in `src/screens/Home.tsx`.
+- **Reference photos:** `reference/` holds photos of the real app (home, login, customer service). The sign-in, home, header and requests styling were matched to them.
 
 ## Demo scripts
 

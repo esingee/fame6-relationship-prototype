@@ -71,7 +71,7 @@ export function BottomNav() {
       {NAV.map(({ key, icon: Icon, to }) => {
         const active = to ? pathname.startsWith(to) : false;
         return (
-          <button key={key} type="button" onClick={() => (to ? nav(to) : toast('Not part of this prototype'))} className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-0.5 text-[11px] font-medium ${active ? 'text-brand' : 'text-ink-soft'}`} aria-current={active ? 'page' : undefined}>
+          <button key={key} type="button" onClick={() => (to ? nav(to) : toast('Not part of this prototype'))} className={`flex min-h-[58px] flex-1 flex-col items-center justify-center gap-0.5 text-[10px] font-semibold uppercase tracking-wide ${active ? 'text-brand-dark' : 'text-[#7a7a7a]'}`} aria-current={active ? 'page' : undefined}>
             <Icon size={22} strokeWidth={active ? 2.4 : 1.8} />
             {t(key)}
           </button>
@@ -85,7 +85,7 @@ export function Logo({ light = false, size = 'md' }: { light?: boolean; size?: '
   // Uses public/logo.png when present; otherwise falls back to a text wordmark.
   const [failed, setFailed] = useLogoState();
   if (!failed)
-    return <img src={`${import.meta.env.BASE_URL}logo.png`} alt="IDFC FIRST Bank" onError={() => setFailed(true)} className={size === 'lg' ? 'h-12' : 'h-8'} />;
+    return <img src={`${import.meta.env.BASE_URL}logo.png`} alt="IDFC FIRST Bank" onError={() => setFailed(true)} className={size === 'lg' ? 'h-14' : 'h-9'} />;
   return (
     <span className={`font-bold tracking-tight ${size === 'lg' ? 'text-3xl' : 'text-xl'} ${light ? 'text-white' : 'text-brand'}`}>
       IDFC <span className={light ? 'text-brand-accent' : 'text-brand-dark'}>FIRST</span> Bank
