@@ -43,7 +43,7 @@ export default function CustomerService() {
         <button type="button" onClick={() => nav('/moments')} className="mt-4 flex min-h-[56px] w-full items-center gap-3 rounded-2xl bg-brand-tint p-3.5 text-left active:bg-[#f1d6d8]">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand text-white"><MapPin size={20} /></span>
           <span className="min-w-0 flex-1">
-            <span className="block font-semibold text-brand-dark">Something changed? Life Update</span>
+            <span className="block font-semibold text-brand-dark">Something changed?</span>
             <span className="block text-[13px] text-ink-soft">See the banking tasks that may matter for what is changing in your life.</span>
           </span>
           <ChevronRight size={20} className="shrink-0 text-ink-soft" />
