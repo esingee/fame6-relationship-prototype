@@ -15,6 +15,8 @@ interface Persisted {
   agentPublished: Record<string, boolean>;
   feedback: Record<string, 'up' | 'down'>;
   testPanelJoined: boolean;
+  ratings: Record<string, { stars: number; review: string }>;
+  votes: Record<string, boolean>;
 }
 
 const seed = (): Persisted => ({
@@ -25,6 +27,8 @@ const seed = (): Persisted => ({
   agentPublished: {},
   feedback: {},
   testPanelJoined: false,
+  ratings: {},
+  votes: {},
 });
 
 const load = (): Persisted => {
@@ -58,6 +62,8 @@ interface Ctx extends Persisted {
   setReminder: (momentId: string, on: boolean) => void;
   resetMoment: (momentId: string) => void;
   setFeedback: (momentId: string, v: 'up' | 'down') => void;
+  rateCase: (caseId: string, stars: number, review: string) => void;
+  toggleVote: (id: string) => void;
   openCount: number;
 }
 
@@ -105,7 +111,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
           closedOn: '26 Nov',
           timeline: [
             ...c.timeline,
-            { at: '26 Nov, 09:15', label: 'Payment matched and charge reversed. Request resolved', by: 'bank' },
+            { at: '26 Nov, 09:15', label: c.id === 'cn-24817' ? 'Payment matched and charge reversed. Request resolved' : 'Toll operator confirmed. ₹185 returned. Request resolved', by: 'bank' },
           ],
         })),
       reopenCase: (id) =>
@@ -161,6 +167,9 @@ export function DemoProvider({ children }: { children: ReactNode }) {
           moments: p.moments.map((m) => (m.id === mid ? structuredClone(seedMoments.find((x) => x.id === mid)!) : m)),
           feedback: Object.fromEntries(Object.entries(p.feedback).filter(([k]) => k !== mid)),
         })),
+      rateCase: (id, stars, review) =>
+        setS((p) => ({ ...p, ratings: { ...p.ratings, [id]: { stars, review: review.trim() } } })),
+      toggleVote: (id) => setS((p) => ({ ...p, votes: { ...p.votes, [id]: !p.votes[id] } })),
       setFeedback: (mid, v) => setS((p) => ({ ...p, feedback: { ...p.feedback, [mid]: v } })),
     };
   }, [s, patchCase]);

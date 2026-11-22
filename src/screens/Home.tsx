@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeftRight, Bell, CalendarClock, Plus, ChevronRight, CreditCard, Eye, EyeOff, Landmark, Lightbulb, MapPin, Megaphone, MoreHorizontal, PiggyBank, ReceiptText, ScanLine, Send, User } from 'lucide-react';
+import { ArrowLeftRight, Bell, CalendarClock, Plus, ChevronRight, CreditCard, Eye, EyeOff, Landmark, Lightbulb, Headset, Megaphone, MoreHorizontal, PiggyBank, ReceiptText, ScanLine, Send, User } from 'lucide-react';
 import { Screen, Logo } from '../components/Shell';
-import { BottomSheet, Card, Chip, useToast } from '../components/ui';
+import { BottomSheet, Card, useToast } from '../components/ui';
 import { useDemo } from '../state/useDemoState';
 import type { StringKey } from '../i18n/strings';
 
@@ -10,6 +10,17 @@ const GOLD = [
   { label: 'Add Money', icon: Plus },
   { label: 'Create FD', icon: PiggyBank },
   { label: 'Start SIP', icon: CalendarClock },
+];
+
+const TILES: { label: string; bg: string; to?: string; icon?: typeof Send }[] = [
+  { label: 'Customer Service', bg: 'bg-[#4E6B4A]', to: '/service', icon: Headset },
+  { label: 'My Networth', bg: 'bg-[#23252B]' },
+  { label: 'Payments', bg: 'bg-[#C99A1B]' },
+  { label: 'Credit Cards', bg: 'bg-[#2F4FB8]' },
+  { label: 'Savings', bg: 'bg-[#B5262B]' },
+  { label: 'Loans', bg: 'bg-[#2478B5]' },
+  { label: 'Deposits', bg: 'bg-[#5B2C8F]' },
+  { label: 'Mutual Funds', bg: 'bg-[#3C3F46]' },
 ];
 
 const QUICK: { key: StringKey; icon: typeof Send }[] = [
@@ -24,21 +35,27 @@ const QUICK: { key: StringKey; icon: typeof Send }[] = [
 ];
 
 export default function Home() {
-  const { t, openCount, lang, setLang, resetDemo } = useDemo();
+  const { t, cases, ideas, lang, setLang, resetDemo } = useDemo();
   const nav = useNavigate();
   const toast = useToast();
   const [show, setShow] = useState(false);
   const [bell, setBell] = useState(false);
   const notYet = () => toast('Not part of this prototype');
+  const notes: { key: string; title: string; text: string; to: string }[] = [];
+  cases.forEach((c) => {
+    if (c.status !== 'resolved') notes.push({ key: c.id, title: 'Update on your request', text: `${c.title}${c.nextUpdateBy ? `. Next update by ${c.nextUpdateBy}.` : '.'}`, to: `/requests/${c.id}` });
+    else if (c.closedOn === '26 Nov') notes.push({ key: c.id, title: 'Your request is resolved', text: `${c.title}. Tap to rate how we did.`, to: `/requests/${c.id}` });
+  });
+  if (ideas.some((i) => i.id === 'iv-28110')) notes.push({ key: 'idea', title: 'A decision on your idea', text: 'Your idea “Show how many EMIs are left” is now live.', to: '/voice/ideas/iv-28110' });
 
   return (
     <>
       <header className="flex shrink-0 items-center justify-between bg-white px-4 py-2">
         <Logo />
         <div className="flex items-center">
-          <button type="button" aria-label="Notifications, 2 new" onClick={() => setBell(true)} className="relative flex h-11 w-11 items-center justify-center rounded-full text-brand-dark">
+          <button type="button" aria-label={`Notifications, ${notes.length} new`} onClick={() => setBell(true)} className="relative flex h-11 w-11 items-center justify-center rounded-full text-brand-dark">
             <Bell size={23} />
-            <span className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-white">2</span>
+            {notes.length > 0 && <span className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-white">{notes.length}</span>}
           </button>
           <button type="button" aria-label="Profile" onClick={notYet} className="flex h-11 w-11 items-center justify-center rounded-full text-brand-dark">
             <User size={23} />
@@ -86,22 +103,16 @@ export default function Home() {
         </div>
 
         <div className="mt-5 space-y-4 bg-app px-4 pb-4 pt-4">
-          <Card onClick={() => nav('/requests')} className="flex items-center gap-3 border-l-4 border-brand">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-tint text-brand">
-              <ReceiptText size={20} />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block font-semibold">{t('home.requests')}</span>
-              <span className="block text-sm text-ink-soft">{openCount === 1 ? t('home.requests.sub') : `${openCount} open requests · Updated today`}</span>
-              <Chip tone="info" className="mt-1.5">{t('home.requests.chip')}</Chip>
-            </span>
-            <ChevronRight size={20} className="text-ink-soft" />
-          </Card>
-
-          <div className="grid grid-cols-2 gap-3">
-            <FeatureTile icon={Lightbulb} title={t('home.voice')} text={t('home.voice.sub')} onClick={() => nav('/voice')} />
-            <FeatureTile icon={MapPin} title={t('home.moments')} text={t('home.moments.sub')} onClick={() => nav('/moments')} />
+          <div className="grid grid-cols-2 gap-2.5">
+            {TILES.map((x) => (
+              <button key={x.label} type="button" onClick={x.to ? () => nav(x.to!) : notYet} className={`flex min-h-[64px] items-center rounded-2xl px-4 py-3 text-left text-[14px] font-semibold leading-tight text-white active:opacity-90 ${x.bg}`}>
+                {x.icon && <x.icon size={18} className="mr-2 shrink-0" />}
+                {x.label}
+              </button>
+            ))}
           </div>
+
+          <FeatureTile icon={Lightbulb} title={t('home.voice')} text={t('home.voice.sub')} onClick={() => nav('/voice')} />
 
           <Card onClick={() => nav('/voice/changed')} className="flex items-center gap-3 !bg-[#FBF4E6]">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold/30 text-brand-dark">
@@ -134,8 +145,10 @@ export default function Home() {
 
       <BottomSheet open={bell} onClose={() => setBell(false)} title="Notifications">
         <div className="space-y-3">
-          <NoteRow title="Update on your request" text="Your EMI request has a new step. Next update by 26 Nov." onClick={() => nav('/requests/cn-24817')} />
-          <NoteRow title="A decision on your idea" text="Your idea “Show how many EMIs are left” is now live." onClick={() => nav('/voice/ideas/iv-28110')} />
+          {notes.length === 0 && <p className="py-4 text-center text-ink-soft">You are all caught up.</p>}
+          {notes.map((n) => (
+            <NoteRow key={n.key} title={n.title} text={n.text} onClick={() => nav(n.to)} />
+          ))}
         </div>
       </BottomSheet>
     </>
@@ -144,7 +157,7 @@ export default function Home() {
 
 function FeatureTile({ icon: Icon, title, text, onClick }: { icon: typeof Lightbulb; title: string; text: string; onClick: () => void }) {
   return (
-    <button type="button" onClick={onClick} className="flex min-h-[44px] flex-col rounded-2xl bg-white p-4 text-left shadow-card active:bg-gray-50">
+    <button type="button" onClick={onClick} className="flex min-h-[44px] w-full flex-col rounded-2xl bg-white p-4 text-left shadow-card active:bg-gray-50">
       <span className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-brand text-white">
         <Icon size={20} />
       </span>

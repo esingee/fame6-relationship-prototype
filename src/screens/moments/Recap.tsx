@@ -45,7 +45,7 @@ export default function Recap() {
         </Card>
 
         <div className="grid grid-cols-2 gap-3">
-          <Button onClick={() => { toast('Checklist saved to your profile'); nav('/home'); }}>Save Checklist</Button>
+          <Button onClick={() => { toast('Checklist saved to your profile'); nav('/service'); }}>Save Checklist</Button>
           <Button variant="outline" onClick={() => { resetMoment(m.id); toast('Checklist deleted'); nav('/moments'); }}>Delete It</Button>
         </div>
       </Screen>

@@ -42,10 +42,10 @@ The app opens on the demo sign-in. **Reset Demo** and the English/हिंद�
 1. From the sheet, tap **Suggest An Improvement** (category pre-set to Loans). Type, or tap the mic, then submit.
 2. On the receipt, show the 4-stage tracker.
 3. My Ideas → the implemented idea's decision note → the declined "developer mode" decision.
-4. You Asked, We Changed.
+4. Ideas We Made Real.
 
 **C. FIRST MOMENTS (about 75 s)**
-1. Home → Life & Money Moments → Moving To A New City.
+1. Home → Customer Service → Life Update → Moving To A New City.
 2. Open Task 1, show the address tip, Mark As Done.
 3. Task 3 → I Need Help → Call me back.
 4. Finish the rest, then See My Recap and show the "No sales call" line.

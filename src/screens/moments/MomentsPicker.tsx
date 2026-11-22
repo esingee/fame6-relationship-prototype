@@ -12,7 +12,7 @@ export default function MomentsPicker() {
   const toast = useToast();
   return (
     <>
-      <AppHeader title={t('moments.title')} back="/home" />
+      <AppHeader title={t('moments.title')} back="/service" />
       <Screen nav className="px-4 py-4">
         <p className="leading-relaxed">
           {t('moments.intro')} <strong>{t('moments.never')}</strong>
@@ -36,7 +36,6 @@ export default function MomentsPicker() {
             );
           })}
         </div>
-        <p className="mt-4 rounded-xl bg-info-tint p-3 text-sm leading-relaxed text-info">{t('moments.privacy')}</p>
       </Screen>
     </>
   );

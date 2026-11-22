@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState, type ButtonHTMLAttributes, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useState, type ButtonHTMLAttributes, type MouseEvent as RMouseEvent, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, X } from 'lucide-react';
 
@@ -163,5 +163,50 @@ export function Toggle({ on, onChange, label }: { on: boolean; onChange: (v: boo
     <button type="button" role="switch" aria-checked={on} aria-label={label} onClick={() => onChange(!on)} className={`relative h-7 w-12 shrink-0 rounded-full transition ${on ? 'bg-ok' : 'bg-gray-300'}`}>
       <span className={`absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition-all ${on ? 'left-[22px]' : 'left-0.5'}`} />
     </button>
+  );
+}
+
+/* ---------- StarRating: 0.5 to 5 in steps of 0.5 ---------- */
+export function StarRating({ value, onChange, size = 36 }: { value: number; onChange?: (v: number) => void; size?: number }) {
+  const readOnly = !onChange;
+  const pick = (i: number, e: RMouseEvent<HTMLButtonElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    onChange?.(e.clientX - r.left < r.width / 2 ? i + 0.5 : i + 1);
+  };
+  const star = (fill: number) => (
+    <span className="relative inline-block" style={{ width: size, height: size }}>
+      <svg viewBox="0 0 24 24" width={size} height={size} className="absolute inset-0 text-gray-300" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" /></svg>
+      <span className="absolute inset-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
+        <svg viewBox="0 0 24 24" width={size} height={size} className="text-gold" fill="currentColor"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" /></svg>
+      </span>
+    </span>
+  );
+  return (
+    <div
+      role={readOnly ? 'img' : 'slider'}
+      aria-label={readOnly ? `Rated ${value} out of 5` : 'Rating'}
+      aria-valuemin={readOnly ? undefined : 0.5}
+      aria-valuemax={readOnly ? undefined : 5}
+      aria-valuenow={readOnly ? undefined : value || undefined}
+      aria-valuetext={value ? `${value} out of 5 stars` : 'No rating yet'}
+      tabIndex={readOnly ? undefined : 0}
+      onKeyDown={(e) => {
+        if (readOnly) return;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); onChange!(Math.min(5, (value || 0) + 0.5)); }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); onChange!(Math.max(0.5, (value || 1) - 0.5)); }
+      }}
+      className="inline-flex gap-1 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-brand"
+    >
+      {[0, 1, 2, 3, 4].map((i) => {
+        const fill = Math.max(0, Math.min(1, value - i));
+        return readOnly ? (
+          <span key={i}>{star(fill)}</span>
+        ) : (
+          <button key={i} type="button" tabIndex={-1} aria-hidden onClick={(e) => pick(i, e)} className="min-h-[44px] min-w-[40px] p-0 flex items-center justify-center">
+            {star(fill)}
+          </button>
+        );
+      })}
+    </div>
   );
 }

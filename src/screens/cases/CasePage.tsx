@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { CalendarClock, Check, FileUp, MessageSquarePlus, PhoneCall, ShieldAlert } from 'lucide-react';
-import { AppHeader, BottomSheet, Button, Card, Chip, Timeline, useToast } from '../../components/ui';
+import { AppHeader, BottomSheet, Button, Card, Chip, StarRating, Timeline, useToast } from '../../components/ui';
 import { Screen } from '../../components/Shell';
 import { useDemo } from '../../state/useDemoState';
 import { statusTone } from './RequestsList';
@@ -21,9 +21,11 @@ export default function CasePage() {
   const { id } = useParams();
   const nav = useNavigate();
   const toast = useToast();
-  const { cases, addTimeline, simulateResolve, reopenCase } = useDemo();
+  const { cases, addTimeline, simulateResolve, reopenCase, ratings, rateCase } = useDemo();
   const c = cases.find((x) => x.id === id);
-  const [sheet, setSheet] = useState<null | 'info' | 'doc' | 'call' | 'escalate' | 'prompt'>(null);
+  const [sheet, setSheet] = useState<null | 'info' | 'doc' | 'call' | 'escalate' | 'prompt' | 'rate'>(null);
+  const [stars, setStars] = useState(0);
+  const [review, setReview] = useState('');
   const [text, setText] = useState('');
   const [slot, setSlot] = useState(SLOTS[1]);
 
@@ -101,6 +103,21 @@ export default function CasePage() {
 
         {resolved && c.id !== 'cn-24817' && (
           <Button variant="outline" onClick={() => { reopenCase(c.id); toast('Request reopened'); }}>Reopen</Button>
+        )}
+
+        {resolved && (
+          <Section title="How Did We Do?">
+            {ratings[c.id] ? (
+              <div>
+                <StarRating value={ratings[c.id].stars} size={26} />
+                <p className="mt-1 text-sm font-medium">{ratings[c.id].stars} out of 5</p>
+                {ratings[c.id].review && <p className="mt-1 leading-relaxed text-ink-soft">“{ratings[c.id].review}”</p>}
+                <button type="button" onClick={() => { setStars(ratings[c.id].stars); setReview(ratings[c.id].review); setSheet('rate'); }} className="mt-1 inline-flex min-h-[44px] items-center text-sm font-semibold text-brand underline">Change Rating</button>
+              </div>
+            ) : (
+              <Button variant="outline" onClick={() => { setStars(0); setReview(''); setSheet('rate'); }}>Rate This Interaction</Button>
+            )}
+          </Section>
         )}
 
         {c.dateChangedReason && !resolved && (
@@ -190,9 +207,21 @@ export default function CasePage() {
       <BottomSheet open={sheet === 'prompt'} onClose={close} title="Your Request Is Resolved">
         <p className="mb-4 text-ink-soft">Thank you for your patience. Two quick things, both optional.</p>
         <div className="space-y-2.5">
-          <Button full variant="outline" onClick={() => { close(); toast('Thanks for your rating'); }}>Rate This Interaction</Button>
+          <Button full variant="outline" onClick={() => { setStars(ratings[c.id]?.stars ?? 0); setReview(ratings[c.id]?.review ?? ''); setSheet('rate'); }}>Rate This Interaction</Button>
           <Button full onClick={() => { close(); nav('/voice/new?category=Loans'); }}>Suggest An Improvement</Button>
         </div>
+      </BottomSheet>
+
+      <BottomSheet open={sheet === 'rate'} onClose={close} title="Rate This Interaction">
+        <p className="mb-3 text-ink-soft">How well did we resolve “{c.title}”? Tap the left or right half of a star for half points.</p>
+        <div className="flex flex-col items-center">
+          <StarRating value={stars} onChange={setStars} />
+          <p className="mt-1 h-5 text-sm font-semibold text-brand-dark" aria-live="polite">{stars ? `${stars} out of 5` : 'Tap a star to rate'}</p>
+        </div>
+        <label htmlFor="review" className="mb-1 mt-3 block text-sm font-medium">Tell us more (optional)</label>
+        <textarea id="review" value={review} onChange={(e) => setReview(e.target.value)} rows={3} maxLength={300} placeholder="How was the request resolved?" className="w-full rounded-xl border border-gray-300 p-3 text-[16px] outline-none focus:border-brand" />
+        <Button full className="mt-3" disabled={!stars} onClick={() => { rateCase(c.id, stars, review); close(); toast('Thanks for your feedback'); }}>Submit Rating</Button>
+        <Button full variant="quiet" className="mt-2" onClick={close}>Skip For Now</Button>
       </BottomSheet>
     </>
   );

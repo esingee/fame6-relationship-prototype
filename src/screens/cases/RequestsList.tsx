@@ -12,7 +12,7 @@ export default function RequestsList() {
   const nav = useNavigate();
   return (
     <>
-      <AppHeader title={t('requests.title')} back="/home" />
+      <AppHeader title={t('requests.title')} back="/service" />
       <Screen nav className="px-4 py-3">
         <p className="pb-2 text-sm text-ink-soft">Everything you have asked us for, in one place, in plain words.</p>
         {cases.map((c) => (
