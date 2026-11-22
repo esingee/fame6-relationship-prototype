@@ -5,7 +5,7 @@ import { seedIdeas } from '../data/ideas';
 import { seedMoments } from '../data/moments';
 import { tr, type Lang, type StringKey } from '../i18n/strings';
 
-const KEY = 'fr2r-demo-state';
+const KEY = 'fr2r-demo-state-v2';
 
 interface Persisted {
   lang: Lang;
@@ -16,7 +16,10 @@ interface Persisted {
   feedback: Record<string, 'up' | 'down'>;
   testPanelJoined: boolean;
   ratings: Record<string, { stars: number; review: string }>;
+  /** Ideas the demo user supports (one support per idea). */
   votes: Record<string, boolean>;
+  /** Workbench overrides: whether the team has picked an idea for Spotlight. */
+  picked: Record<string, boolean>;
 }
 
 const seed = (): Persisted => ({
@@ -29,6 +32,7 @@ const seed = (): Persisted => ({
   testPanelJoined: false,
   ratings: {},
   votes: {},
+  picked: {},
 });
 
 const load = (): Persisted => {
@@ -64,6 +68,11 @@ interface Ctx extends Persisted {
   setFeedback: (momentId: string, v: 'up' | 'down') => void;
   rateCase: (caseId: string, stars: number, review: string) => void;
   toggleVote: (id: string) => void;
+  supportIdea: (id: string) => void;
+  togglePick: (id: string) => void;
+  supportCount: (i: Idea) => number;
+  isSupported: (i: Idea) => boolean;
+  isSpotlight: (i: Idea) => boolean;
   openCount: number;
 }
 
@@ -146,6 +155,10 @@ export function DemoProvider({ children }: { children: ReactNode }) {
           mine: true,
           language: input.language,
           voiceNote: input.voiceNote,
+          supporters: 1,
+          supportersLast30: 1,
+          owner: 'Being assigned',
+          decisionBy: '2026-12-22',
         };
         setS((p) => ({ ...p, ideas: [...p.ideas, idea] }));
         return idea.id;
@@ -170,6 +183,11 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       rateCase: (id, stars, review) =>
         setS((p) => ({ ...p, ratings: { ...p.ratings, [id]: { stars, review: review.trim() } } })),
       toggleVote: (id) => setS((p) => ({ ...p, votes: { ...p.votes, [id]: !p.votes[id] } })),
+      supportIdea: (id) => setS((p) => ({ ...p, votes: { ...p.votes, [id]: true } })),
+      togglePick: (id) => setS((p) => ({ ...p, picked: { ...p.picked, [id]: !(p.picked[id] ?? p.ideas.find((i) => i.id === id)?.spotlight ?? false) } })),
+      supportCount: (i) => i.supporters + (s.votes[i.id] && !i.mine ? 1 : 0),
+      isSupported: (i) => i.mine || !!s.votes[i.id],
+      isSpotlight: (i) => s.picked[i.id] ?? !!i.spotlight,
       setFeedback: (mid, v) => setS((p) => ({ ...p, feedback: { ...p.feedback, [mid]: v } })),
     };
   }, [s, patchCase]);

@@ -47,6 +47,16 @@ export interface Idea {
   mine: boolean;
   language?: string;
   voiceNote?: boolean;
+  /** Total customers supporting this idea (includes the demo user for ideas they submitted). */
+  supporters: number;
+  supportersLast30: number;
+  owner: string;
+  /** ISO date by which a decision is promised. */
+  decisionBy: string;
+  spotlight?: boolean;
+  spotlightReasons?: string[];
+  /** Dummy 0-100 score shown only in the internal Workbench. */
+  aiScore?: number;
 }
 
 export type TaskStatus = 'todo' | 'done' | 'need_help' | 'not_relevant';

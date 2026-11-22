@@ -1,25 +1,24 @@
 import { Link } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
+import { useDemo } from '../../state/useDemoState';
+import { DEMO_TODAY, fmtDate, isOpen } from '../../data/ideas';
 
 const KPIS = [
   ['Acknowledged within 1 day', '97%'],
   ['Decision within 30 days', '82%'],
   ['Contributors taking a second action', '24%'],
 ];
-const CLUSTERS = [
-  ['Loan progress view', 1240, '68% salaried · 32% self-employed', 'EN 71% · HI 22% · Other 7%', 'Loans Digital', 'Decision Published', 56, false],
-  ['Stop loan-offer calls', 2310, '55% salaried · 45% retired / other', 'EN 49% · HI 38% · Other 13%', 'Customer Comms', 'Decision Published', 41, false],
-  ['Developer-mode login', 142, '80% salaried · 20% self-employed', 'EN 90% · HI 6% · Other 4%', 'App Security', 'Decision Published', 77, false],
-  ['Email OTP when abroad', 389, '72% salaried · 28% NRI-linked', 'EN 93% · HI 3% · Other 4%', 'Digital Identity', 'Under Review', 38, true],
-  ['Larger text in app', 521, '46% senior · 54% other', 'EN 52% · HI 31% · Other 17%', 'Accessibility', 'Testing', 19, false],
-] as const;
 const LOG = [
   ['19 Oct', 'Developer-mode login: Not proceeding. Reason published; fix shipped.'],
-  ['28 Oct', 'Loan progress view: Implemented in Loans → Repayment Progress.'],
+  ['28 Oct', 'Larger text option: Implemented in Profile → Display.'],
   ['2 Nov', 'Stop loan-offer calls: Offer Calls toggle added. 12-month respect window set.'],
 ];
 
 export default function Workbench() {
+  const { ideas, supportCount, isSpotlight, togglePick } = useDemo();
+  const top10 = ideas.filter(isOpen).sort((a, b) => supportCount(b) - supportCount(a)).slice(0, 10);
+  const days = (iso: string) => Math.round((Date.parse(iso) - Date.parse(DEMO_TODAY)) / 86400000);
+  const lowSupport = ideas.filter((i) => isOpen(i) && i.supporters < 60).sort((a, b) => (b.aiScore ?? 0) - (a.aiScore ?? 0));
   return (
     <div className="min-h-full bg-[#EEEBE8] p-4 md:p-6">
       <div className="mx-auto max-w-6xl">
@@ -41,21 +40,49 @@ export default function Workbench() {
         </div>
 
         <div className="mt-4 overflow-x-auto rounded-2xl bg-white shadow-card">
-          <table className="w-full min-w-[820px] text-left text-sm">
+          <h2 className="px-4 pt-4 text-sm font-semibold uppercase tracking-wide text-brand-dark">Top-10 rule</h2>
+          <p className="px-4 pb-2 text-sm text-ink-soft">Every top-10 idea needs an owner and a decision date. A red flag means the date has passed; amber means it is due within 3 days.</p>
+          <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="bg-gray-50 text-xs uppercase tracking-wide text-ink-soft">
-              <tr>{['Theme', 'Count', 'Segment mix', 'Language mix', 'Owner', 'Stage', 'Days open', 'Overdue'].map((h) => <th key={h} className="px-3 py-3 font-semibold">{h}</th>)}</tr>
+              <tr>{['Idea', 'Supporters', 'Owner', 'Decision by', 'Flag'].map((h) => <th key={h} className="px-3 py-3 font-semibold">{h}</th>)}</tr>
             </thead>
             <tbody>
-              {CLUSTERS.map((r) => (
-                <tr key={r[0]} className="border-t border-gray-100">
-                  <td className="px-3 py-3 font-semibold">{r[0]}</td>
-                  <td className="px-3 py-3">{r[1].toLocaleString('en-IN')}</td>
-                  <td className="px-3 py-3 text-ink-soft">{r[2]}</td>
-                  <td className="px-3 py-3 text-ink-soft">{r[3]}</td>
-                  <td className="px-3 py-3">{r[4]}</td>
-                  <td className="px-3 py-3">{r[5]}</td>
-                  <td className="px-3 py-3">{r[6]}</td>
-                  <td className="px-3 py-3">{r[7] ? <span className="inline-flex items-center gap-1 font-semibold text-warn"><AlertTriangle size={14} /> Due 15 Dec</span> : '—'}</td>
+              {top10.map((i) => {
+                const d = days(i.decisionBy);
+                return (
+                  <tr key={i.id} className="border-t border-gray-100">
+                    <td className="px-3 py-3 font-semibold">{i.title}</td>
+                    <td className="px-3 py-3">{supportCount(i).toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-3">{i.owner}</td>
+                    <td className="px-3 py-3">{fmtDate(i.decisionBy)}</td>
+                    <td className="px-3 py-3">
+                      {d < 0 ? <span className="inline-flex items-center gap-1 font-semibold text-red-700"><AlertTriangle size={14} /> Overdue</span> : d <= 3 ? <span className="inline-flex items-center gap-1 font-semibold text-warn"><AlertTriangle size={14} /> Due in {d} days</span> : '—'}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="mt-4 overflow-x-auto rounded-2xl bg-white shadow-card">
+          <h2 className="px-4 pt-4 text-sm font-semibold uppercase tracking-wide text-brand-dark">Spotlight shortlist</h2>
+          <p className="px-4 pb-2 text-sm text-ink-soft">AI shortlists, the team decides.</p>
+          <table className="w-full min-w-[620px] text-left text-sm">
+            <thead className="bg-gray-50 text-xs uppercase tracking-wide text-ink-soft">
+              <tr>{['Idea', 'Supporters', 'AI score', 'Picked'].map((h) => <th key={h} className="px-3 py-3 font-semibold">{h}</th>)}</tr>
+            </thead>
+            <tbody>
+              {lowSupport.map((i) => (
+                <tr key={i.id} className="border-t border-gray-100">
+                  <td className="px-3 py-3 font-semibold">{i.title}</td>
+                  <td className="px-3 py-3">{i.supporters}</td>
+                  <td className="px-3 py-3">{i.aiScore ?? 50}/100</td>
+                  <td className="px-3 py-3">
+                    <button type="button" role="switch" aria-checked={isSpotlight(i)} aria-label={`Pick for Spotlight: ${i.title}`} onClick={() => togglePick(i.id)} className={`min-h-[44px] rounded-full border px-4 text-sm font-semibold ${isSpotlight(i) ? 'border-brand bg-brand text-white' : 'border-gray-300 bg-white text-ink-soft'}`}>
+                      {isSpotlight(i) ? 'Picked' : 'Pick'}
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

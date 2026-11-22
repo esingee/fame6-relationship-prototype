@@ -46,7 +46,7 @@ export default function Home() {
     if (c.status !== 'resolved') notes.push({ key: c.id, title: 'Update on your request', text: `${c.title}${c.nextUpdateBy ? `. Next update by ${c.nextUpdateBy}.` : '.'}`, to: `/requests/${c.id}` });
     else if (c.closedOn === '26 Nov') notes.push({ key: c.id, title: 'Your request is resolved', text: `${c.title}. Tap to rate how we did.`, to: `/requests/${c.id}` });
   });
-  if (ideas.some((i) => i.id === 'iv-28110')) notes.push({ key: 'idea', title: 'A decision on your idea', text: 'Your idea “Show how many EMIs are left” is now live.', to: '/voice/ideas/iv-28110' });
+  if (ideas.some((i) => i.id === 'iv-27990')) notes.push({ key: 'idea', title: 'A decision on your idea', text: 'Your idea “Stop daily loan-offer calls” is now live.', to: '/voice/ideas/iv-27990' });
 
   return (
     <>

@@ -130,7 +130,7 @@ export function StageTracker({ stage, dates }: { stage: (typeof STAGE_KEYS)[numb
         return (
           <li key={label} className="relative flex flex-1 flex-col items-center text-center">
             {i > 0 && <span className={`absolute right-1/2 top-3 h-0.5 w-full ${i <= idx ? 'bg-ok' : 'bg-gray-200'}`} />}
-            <span className={`relative z-10 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${lit ? 'bg-ok text-white' : 'bg-gray-200 text-ink-soft'}`}>{lit ? '✓' : i + 1}</span>
+            <span className={`relative z-10 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${lit ? 'bg-ok text-white' : 'bg-gray-200 text-ink-soft'}`}>{lit ? '✓' : '·'}</span>
             <span className={`mt-1.5 px-0.5 text-[11px] leading-tight ${lit ? 'font-semibold text-ink' : 'text-ink-soft'}`}>{label}</span>
             {dates?.[STAGE_KEYS[i]] && <span className="mt-0.5 text-[11px] text-ink-soft">{dates[STAGE_KEYS[i]]}</span>}
           </li>

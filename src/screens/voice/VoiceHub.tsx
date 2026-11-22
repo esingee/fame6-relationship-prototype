@@ -1,61 +1,136 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, ChevronUp, FlaskConical, Lightbulb, ListChecks, Megaphone } from 'lucide-react';
-import { AppHeader, BottomSheet, Button, Card, Row } from '../../components/ui';
+import { ChevronRight, FlaskConical, Lightbulb, Megaphone, Plus, Sparkles } from 'lucide-react';
+import { AppHeader, BottomSheet, Button, Card, Chip } from '../../components/ui';
 import { Screen } from '../../components/Shell';
+import { BoardCard, fmtCount } from '../../components/IdeaCard';
 import { useDemo } from '../../state/useDemoState';
+import { fmtDate, isOpen } from '../../data/ideas';
+import { ideaChip } from './MyIdeas';
 
-const TOP_ASKS = [
-  { id: 'ta-1', title: 'Show my full loan statement in one tap', category: 'Loans' },
-  { id: 'ta-2', title: 'Let me pause or change an EMI date from the app', category: 'Loans' },
-  { id: 'ta-3', title: 'Get login OTP by email when I am abroad', category: 'App' },
-  { id: 'ta-4', title: 'Track a debit card replacement step by step', category: 'Cards' },
-  { id: 'ta-5', title: 'Tell me the reason when a UPI payment fails', category: 'Payments' },
-  { id: 'ta-6', title: 'Download tax-ready interest certificates anytime', category: 'Savings' },
-  { id: 'ta-7', title: 'Add a joint-account view for family expenses', category: 'Accounts' },
-  { id: 'ta-8', title: 'Reach a human from any screen without long menus', category: 'Customer Service' },
-  { id: 'ta-9', title: 'Set a monthly spending limit with alerts', category: 'Cards' },
-  { id: 'ta-10', title: 'Keep a simple Hindi and English toggle on every screen', category: 'App' },
+type Tab = 'top' | 'rising' | 'decided';
+const TABS: { id: Tab; label: string }[] = [
+  { id: 'top', label: 'Most Supported' },
+  { id: 'rising', label: 'Rising This Month' },
+  { id: 'decided', label: 'Decided' },
 ];
+const INITIAL = 5;
 
 export default function VoiceHub() {
-  const { t, ideas, testPanelJoined, joinTestPanel, votes, toggleVote } = useDemo();
+  const { t, ideas, testPanelJoined, joinTestPanel, supportCount, isSpotlight } = useDemo();
   const nav = useNavigate();
   const [sheet, setSheet] = useState(false);
-  const mine = ideas.filter((i) => i.mine).length;
+  const [tab, setTab] = useState<Tab>('top');
+  const [all, setAll] = useState(false);
+
+  const mine = ideas.filter((i) => i.mine).sort((a, b) => (a.id < b.id ? 1 : -1));
+  const open = ideas.filter(isOpen);
+  const top = [...open].sort((a, b) => supportCount(b) - supportCount(a));
+  const rising = [...open].sort((a, b) => b.supportersLast30 - a.supportersLast30).slice(0, 8);
+  const decided = ideas.filter((i) => i.decision);
+  const spot = open.filter(isSpotlight).slice(0, 2);
+  const real = decided.find((i) => i.decision === 'implemented');
+  const list = tab === 'top' ? (all ? top : top.slice(0, INITIAL)) : tab === 'rising' ? rising : decided;
 
   return (
     <>
       <AppHeader title={t('voice.title')} back="/home" />
-      <Screen nav className="space-y-1 px-4 py-4">
-        <p className="text-[15px] leading-snug text-ink">{t('voice.intro')}</p>
+      <Screen nav className="px-4 pb-6 pt-4">
+        <h1 className="text-[20px] font-semibold leading-tight">We’d love to hear from you.</h1>
+        <p className="mt-0.5 text-ink-soft">{t('voice.intro')}</p>
 
-        <Button full className="!min-h-[52px] justify-start" onClick={() => nav('/voice/new')}>
-          <Lightbulb size={20} /> {t('voice.suggest')}
-        </Button>
-        <NavRow icon={ListChecks} label={`${t('voice.ideas')} (${mine})`} onClick={() => nav('/voice/ideas')} />
-        <NavRow icon={Megaphone} label={t('voice.changed')} onClick={() => nav('/voice/changed')} />
+        <div className="mt-4 rounded-2xl bg-gradient-to-br from-[#B3222B] to-[#8F161D] p-4 text-white">
+          <div className="flex items-center gap-3">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gold text-brand-dark"><Lightbulb size={22} /></span>
+            <p className="text-[16px] font-semibold">Have an improvement in mind?</p>
+          </div>
+          <button type="button" onClick={() => nav('/voice/new')} className="mt-3 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-white font-semibold text-brand">
+            <Plus size={18} /> {t('voice.suggest')}
+          </button>
+        </div>
 
-        <section className="pt-5" aria-labelledby="top-asks">
-          <h2 id="top-asks" className="text-[16px] font-semibold">Most Requested Changes</h2>
-          <p className="mb-1 text-sm text-ink-soft">Upvote the changes you would like to see. We look at these first.</p>
-          {TOP_ASKS.map((a) => (
-            <div key={a.id} className="flex items-center gap-3 border-b border-gray-100 py-3 last:border-0">
-              <div className="min-w-0 flex-1">
-                <p className="font-medium leading-snug">{a.title}</p>
-                <p className="mt-0.5 text-xs text-ink-soft">{a.category}</p>
-              </div>
-              <button type="button" aria-pressed={!!votes[a.id]} aria-label={`${votes[a.id] ? 'Remove upvote from' : 'Upvote'}: ${a.title}`} onClick={() => toggleVote(a.id)} className={`flex min-h-[44px] shrink-0 items-center gap-1 rounded-full border px-3 text-[13px] font-semibold ${votes[a.id] ? 'border-brand bg-brand text-white' : 'border-gray-300 bg-white text-ink-soft'}`}>
-                <ChevronUp size={16} /> {votes[a.id] ? 'Upvoted' : 'Upvote'}
-              </button>
+        <div className="mb-1 mt-6 flex items-center justify-between">
+          <h2 className="text-[16px] font-semibold">{t('voice.ideas')} ({mine.length})</h2>
+          <button type="button" onClick={() => nav('/voice/ideas')} className="inline-flex min-h-[44px] items-center text-[13px] font-semibold text-brand">View all <ChevronRight size={16} /></button>
+        </div>
+        {mine.slice(0, 2).map((i) => {
+          const c = ideaChip(i);
+          return (
+            <button key={i.id} type="button" onClick={() => nav(`/voice/ideas/${i.id}`)} className="flex min-h-[44px] w-full items-center gap-3 border-b border-gray-100 py-3 text-left last:border-0">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand"><Lightbulb size={19} /></span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-semibold leading-snug">{i.title}</span>
+                <span className="block text-xs text-ink-soft">{fmtCount(supportCount(i))} agree{i.decision ? '' : ` · Decision by ${fmtDate(i.decisionBy)}`}</span>
+              </span>
+              <Chip tone={c.tone} className="shrink-0">{c.label.replace('Decision Published: ', '')}</Chip>
+            </button>
+          );
+        })}
+
+        {real?.decisionNote && (
+          <button type="button" onClick={() => nav('/voice/changed')} className="mt-5 block w-full rounded-2xl bg-[#FBF4E6] p-4 text-left active:opacity-90">
+            <span className="flex items-center gap-2">
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white text-brand"><Megaphone size={18} /></span>
+              <span className="flex-1 text-[16px] font-semibold">{t('voice.changed')}</span>
+              <Chip tone="ok">Implemented</Chip>
+            </span>
+            <span className="mt-2 block font-semibold leading-snug">{real.title}</span>
+            <span className="mt-0.5 block text-sm leading-snug text-ink-soft">{real.decisionNote.changed}</span>
+            <span className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-brand">See what changed <ChevronRight size={16} /></span>
+          </button>
+        )}
+
+        {spot.length > 0 && (
+          <section className="mt-6" aria-labelledby="spot">
+            <h2 id="spot" className="flex items-center gap-1.5 text-[16px] font-semibold"><Sparkles size={17} className="text-brand" /> Spotlight: picked by our team</h2>
+            <p className="mb-2 text-sm text-ink-soft">Great ideas don’t always start popular.</p>
+            <div className="grid grid-cols-1 gap-2.5">
+              {spot.map((i) => (
+                <button key={i.id} type="button" onClick={() => nav(`/voice/ideas/${i.id}`)} className="rounded-2xl border border-brand/30 bg-brand-tint p-3.5 text-left active:opacity-90">
+                  <span className="block font-semibold leading-snug">{i.title}</span>
+                  <span className="mt-1.5 flex flex-wrap gap-1.5">
+                    <Chip tone="brand">Spotlight</Chip>
+                    <Chip tone="grey">{i.supporters < 25 ? 'New' : fmtCount(i.supporters)}</Chip>
+                  </span>
+                </button>
+              ))}
             </div>
-          ))}
+          </section>
+        )}
+
+        <section className="mt-6" aria-labelledby="board">
+          <h2 id="board" className="text-[16px] font-semibold">Idea Board</h2>
+          <p className="mb-2 text-sm leading-snug text-ink-soft">Support shows us demand. Decisions also weigh safety, rules and cost. Every idea gets an answer.</p>
+          <div role="tablist" aria-label="Idea board" className="flex overflow-hidden rounded-xl border border-gray-200">
+            {TABS.map((x) => (
+              <button key={x.id} type="button" role="tab" aria-selected={tab === x.id} onClick={() => setTab(x.id)} className={`min-h-[44px] flex-1 px-1 text-[12.5px] font-semibold ${tab === x.id ? 'bg-brand text-white' : 'bg-white text-ink-soft'}`}>
+                {x.label}
+              </button>
+            ))}
+          </div>
+          <div role="tabpanel">
+            {list.map((i) =>
+              tab === 'decided' ? (
+                <button key={i.id} type="button" onClick={() => nav(`/voice/ideas/${i.id}`)} className="flex min-h-[44px] w-full items-center gap-3 border-b border-gray-100 py-3 text-left last:border-0">
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-semibold leading-snug">{i.title}</span>
+                    <span className="text-xs text-ink-soft">Decided {i.stageDates.decision} · {fmtCount(i.supporters)} asked</span>
+                  </span>
+                  <Chip tone={ideaChip(i).tone} className="shrink-0">{ideaChip(i).label.replace('Decision Published: ', '')}</Chip>
+                  <ChevronRight size={18} className="shrink-0 text-ink-soft" />
+                </button>
+              ) : (
+                <BoardCard key={i.id} idea={i} rising={tab === 'rising'} />
+              ),
+            )}
+          </div>
+          {tab === 'top' && top.length > INITIAL && (
+            <Button variant="quiet" full className="mt-2" onClick={() => setAll((v) => !v)}>{all ? 'Show Fewer' : 'Show More Ideas'}</Button>
+          )}
         </section>
 
-        <Card className="mt-4 !bg-[#FBF4E6]">
-          <p className="flex items-center gap-2 font-semibold text-brand-dark">
-            <FlaskConical size={18} /> Ideas Being Tested Now
-          </p>
+        <Card className="mt-6 !bg-[#FBF4E6]">
+          <p className="flex items-center gap-2 font-semibold text-brand-dark"><FlaskConical size={18} /> Ideas Being Tested Now</p>
           <p className="mt-1.5 leading-relaxed">Help us test: Close your loan from the app. 5 minutes, earn nothing but our thanks.</p>
           <Button variant="outline" className="mt-3" onClick={() => setSheet(true)}>
             {testPanelJoined ? 'You’re On The Test Panel' : 'Take A Look'}
@@ -69,29 +144,10 @@ export default function VoiceHub() {
             ? 'You are already on the panel. We will message you once, when a test is ready.'
             : 'We will message you only when a test matches. It takes about 5 minutes. You can leave the panel anytime, and we will never use it to sell you anything.'}
         </p>
-        <Button
-          full
-          className="mt-4"
-          onClick={() => {
-            joinTestPanel();
-            setSheet(false);
-          }}
-        >
+        <Button full className="mt-4" onClick={() => { joinTestPanel(); setSheet(false); }}>
           {testPanelJoined ? 'Close' : 'Join The Test Panel'}
         </Button>
       </BottomSheet>
     </>
-  );
-}
-
-function NavRow({ icon: Icon, label, onClick }: { icon: typeof Lightbulb; label: string; onClick: () => void }) {
-  return (
-    <Row onClick={onClick} className="flex items-center gap-3">
-      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-tint text-brand">
-        <Icon size={20} />
-      </span>
-      <span className="flex-1 font-semibold">{label}</span>
-      <ChevronRight size={20} className="text-ink-soft" />
-    </Row>
   );
 }

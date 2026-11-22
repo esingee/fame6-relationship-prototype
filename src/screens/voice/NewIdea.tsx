@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Check, Mic, Square } from 'lucide-react';
-import { AppHeader, Button } from '../../components/ui';
+import { AppHeader, Button, Card } from '../../components/ui';
+import { findSimilar } from '../../lib/similarity';
+import { fmtCount } from '../../components/IdeaCard';
+import type { Idea } from '../../data/types';
 import { Screen } from '../../components/Shell';
 import { useDemo } from '../../state/useDemoState';
 import { useToast } from '../../components/ui';
@@ -13,7 +16,7 @@ export default function NewIdea() {
   const nav = useNavigate();
   const toast = useToast();
   const [params] = useSearchParams();
-  const { addIdea } = useDemo();
+  const { addIdea, ideas, supportIdea, supportCount } = useDemo();
   const initial = params.get('category');
   const [cat, setCat] = useState(CATS.includes(initial ?? '') ? (initial as string) : 'App');
   const [text, setText] = useState('');
@@ -22,6 +25,18 @@ export default function NewIdea() {
   const [lang, setLang] = useState('English');
   const [invite, setInvite] = useState(true);
   const timer = useRef<number>();
+  const [matches, setMatches] = useState<{ idea: Idea; score: number }[]>([]);
+  const [dismissed, setDismissed] = useState<string[]>([]);
+  // Debounced (~300 ms) similar-idea check once at least 3 words are typed.
+  useEffect(() => {
+    const h = window.setTimeout(() => setMatches(findSimilar(text, ideas)), 300);
+    return () => window.clearTimeout(h);
+  }, [text, ideas]);
+  const shown = matches.filter((m) => !dismissed.includes(m.idea.id));
+  const addSupport = (id: string) => {
+    supportIdea(id);
+    nav(`/voice/receipt/${id}?joined=1`, { replace: true });
+  };
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
   const record = () => {
@@ -68,6 +83,17 @@ export default function NewIdea() {
           <label htmlFor="idea" className="mb-2 block text-sm font-semibold text-ink-soft">Your idea</label>
           <textarea id="idea" value={text} onChange={(e) => setText(e.target.value)} rows={4} placeholder="What should we change, and why?" className="w-full rounded-xl border border-gray-300 bg-white p-3 text-[16px] outline-none focus:border-brand" />
         </section>
+
+        {shown.map((m) => (
+          <Card key={m.idea.id} className="!bg-[#FBF4E6]" aria-live="polite">
+            <p className="text-sm text-ink-soft">Looks similar to</p>
+            <p className="font-semibold leading-snug">“{m.idea.title}” <span className="font-normal text-ink-soft">({fmtCount(supportCount(m.idea))})</span></p>
+            <div className="mt-3 flex flex-col gap-2">
+              <Button full onClick={() => addSupport(m.idea.id)}>That’s my idea, add my support</Button>
+              <Button full variant="outline" onClick={() => setDismissed((d) => [...d, ...shown.map((x) => x.idea.id)])}>Mine is different, post it</Button>
+            </div>
+          </Card>
+        ))}
 
         <section className="rounded-2xl bg-white p-4 shadow-card">
           <div className="flex items-center gap-3">
