@@ -24,7 +24,7 @@ const QUICK: { key: StringKey; icon: typeof Send }[] = [
 ];
 
 export default function Home() {
-  const { t, openCount } = useDemo();
+  const { t, openCount, lang, setLang, resetDemo } = useDemo();
   const nav = useNavigate();
   const toast = useToast();
   const [show, setShow] = useState(false);
@@ -113,6 +113,22 @@ export default function Home() {
             </span>
             <ChevronRight size={20} className="text-ink-soft" />
           </Card>
+
+          <div className="flex items-center justify-between gap-2 border-t border-gray-100 pt-3 text-xs text-ink-soft">
+            <span>Demo controls</span>
+            <div className="flex items-center gap-2">
+              <div className="flex overflow-hidden rounded-full border border-gray-300 font-semibold" role="group" aria-label="Language">
+                {(['en', 'hi'] as const).map((l) => (
+                  <button key={l} type="button" aria-pressed={lang === l} onClick={() => setLang(l)} className={`min-h-[36px] px-3 ${lang === l ? 'bg-brand text-white' : 'bg-white text-ink-soft'}`}>
+                    {l === 'en' ? 'English' : 'हिंदी'}
+                  </button>
+                ))}
+              </div>
+              <button type="button" onClick={() => { resetDemo(); toast('Demo reset to the starting state'); nav('/signin'); }} className="min-h-[36px] rounded-full border border-gray-300 bg-white px-3 font-semibold text-ink-soft">
+                Reset Demo
+              </button>
+            </div>
+          </div>
         </div>
       </Screen>
 
@@ -140,7 +156,7 @@ function FeatureTile({ icon: Icon, title, text, onClick }: { icon: typeof Lightb
 
 function NoteRow({ title, text, onClick }: { title: string; text: string; onClick: () => void }) {
   return (
-    <button type="button" onClick={onClick} className="flex min-h-[44px] w-full items-center gap-3 rounded-xl bg-app p-3 text-left">
+    <button type="button" onClick={onClick} className="flex min-h-[44px] w-full items-center gap-3 rounded-xl bg-soft p-3 text-left">
       <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-brand" />
       <span className="flex-1">
         <span className="block font-semibold">{title}</span>

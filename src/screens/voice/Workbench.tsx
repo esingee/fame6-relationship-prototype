@@ -28,7 +28,7 @@ export default function Workbench() {
             <span className="rounded bg-brand-accent px-2 py-0.5 text-xs font-bold text-black">Internal view (demo)</span>
             <h1 className="mt-1 text-2xl font-semibold text-brand-dark">Customer Voice Workbench</h1>
           </div>
-          <Link to="/" className="inline-flex min-h-[44px] items-center text-sm font-semibold text-brand underline">Back to launcher</Link>
+          <Link to="/home" className="inline-flex min-h-[44px] items-center text-sm font-semibold text-brand underline">Back to home</Link>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-3">

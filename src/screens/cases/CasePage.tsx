@@ -11,7 +11,7 @@ const SLOTS = ['Today, 6 to 8 pm', 'Tomorrow, 10 am to 12 pm', 'Tomorrow, 4 to 6
 function Section({ title, children, tone }: { title: string; children: ReactNode; tone?: 'warn' }) {
   return (
     <Card className={tone === 'warn' ? '!bg-warn-tint ring-1 ring-warn/30' : ''}>
-      <h2 className={`mb-2 text-[13px] font-semibold uppercase tracking-wide ${tone === 'warn' ? 'text-warn' : 'text-brand-dark'}`}>{title}</h2>
+      <h2 className={`mb-1.5 text-[16px] font-semibold ${tone === 'warn' ? 'text-warn' : 'text-ink'}`}>{title}</h2>
       {children}
     </Card>
   );
@@ -175,11 +175,11 @@ export default function CasePage() {
       <BottomSheet open={sheet === 'escalate'} onClose={close} title="Escalate This Request">
         <p className="text-ink-soft">If you are not happy with how this is going, you have two routes. You never lose any of your rights by using them.</p>
         <div className="mt-3 space-y-3">
-          <div className="rounded-xl bg-app p-3">
+          <div className="rounded-xl bg-soft p-3">
             <p className="font-semibold">1. Internal Ombudsman</p>
             <p className="text-sm text-ink-soft">A senior person inside the bank, separate from the team handling your case. They look at it again with fresh eyes.</p>
           </div>
-          <div className="rounded-xl bg-app p-3">
+          <div className="rounded-xl bg-soft p-3">
             <p className="font-semibold">2. RBI Ombudsman</p>
             <p className="text-sm text-ink-soft">An independent office run by the Reserve Bank of India. You can go here if you disagree with our final answer, or if we have not replied within 30 days. It is free.</p>
           </div>

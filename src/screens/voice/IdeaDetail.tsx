@@ -35,7 +35,7 @@ export default function IdeaDetail() {
           <DecisionNote idea={idea} />
         ) : (
           <Card>
-            <p className="text-[13px] font-semibold uppercase tracking-wide text-brand-dark">What happens next</p>
+            <p className="text-[16px] font-semibold text-ink">What happens next</p>
             <p className="mt-1 leading-relaxed">{idea.note ?? 'We’ll decide whether to take this forward within 30 days and tell you why, either way.'}</p>
           </Card>
         )}

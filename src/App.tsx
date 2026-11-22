@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Shell } from './components/Shell';
-import Launcher from './screens/Launcher';
 import SignIn from './screens/SignIn';
 import Home from './screens/Home';
 import RequestsList from './screens/cases/RequestsList';
@@ -21,7 +20,7 @@ export default function App() {
   return (
     <Routes>
       <Route element={<Shell />}>
-        <Route path="/" element={<Launcher />} />
+        <Route path="/" element={<Navigate to="/signin" replace />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/home" element={<Home />} />
         <Route path="/requests" element={<RequestsList />} />

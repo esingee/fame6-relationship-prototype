@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
-import { AppHeader, Card, Chip, type Tone } from '../../components/ui';
+import { ChevronRight, Plus } from 'lucide-react';
+import { AppHeader, Button, Card, Chip, type Tone } from '../../components/ui';
 import { Screen } from '../../components/Shell';
 import { useDemo } from '../../state/useDemoState';
 import type { Idea } from '../../data/types';
@@ -17,7 +17,7 @@ export function ideaChip(i: Idea): { label: string; tone: Tone } {
 export default function MyIdeas() {
   const { ideas } = useDemo();
   const nav = useNavigate();
-  const mine = [...ideas.filter((i) => i.mine)].sort((a, b) => (a.id === 'iv-30412' ? -1 : b.id === 'iv-30412' ? 1 : 0));
+  const mine = [...ideas.filter((i) => i.mine)].sort((a, b) => (a.id < b.id ? 1 : -1));
   const pub = ideas.filter((i) => !i.mine && i.decision);
 
   const row = (i: Idea) => {
@@ -38,6 +38,9 @@ export default function MyIdeas() {
     <>
       <AppHeader title="My Ideas" back="/voice" />
       <Screen nav className="space-y-3 px-4 py-4">
+        <Button full className="!min-h-[50px]" onClick={() => nav('/voice/new')}>
+          <Plus size={18} /> Suggest An Improvement
+        </Button>
         {mine.map(row)}
         {pub.length > 0 && (
           <>

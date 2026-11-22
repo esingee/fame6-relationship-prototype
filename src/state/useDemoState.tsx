@@ -129,9 +129,10 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         }));
       },
       addIdea: (input) => {
+        const n = 30412 + s.ideas.filter((i) => i.id >= 'iv-30412').length;
         const idea: Idea = {
-          id: 'iv-30412',
-          code: 'IV-30412',
+          id: `iv-${n}`,
+          code: `IV-${n}`,
           title: input.title,
           category: input.category,
           stage: 'heard',
@@ -140,7 +141,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
           language: input.language,
           voiceNote: input.voiceNote,
         };
-        setS((p) => ({ ...p, ideas: [...p.ideas.filter((i) => i.id !== idea.id), idea] }));
+        setS((p) => ({ ...p, ideas: [...p.ideas, idea] }));
         return idea.id;
       },
       joinTestPanel: () => setS((p) => ({ ...p, testPanelJoined: true })),

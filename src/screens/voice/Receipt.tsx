@@ -29,13 +29,13 @@ export default function Receipt() {
         </div>
 
         <Card>
-          <p className="text-[13px] font-semibold uppercase tracking-wide text-brand-dark">What we recorded</p>
+          <p className="text-[16px] font-semibold text-ink">What we recorded</p>
           <p className="mt-1 leading-relaxed">{idea.title}</p>
           <p className="mt-1 text-sm text-ink-soft">Category: {idea.category}{idea.voiceNote ? ' · Voice note (0:14) attached' : ''}{idea.language ? ` · Updates in ${idea.language}` : ''}</p>
         </Card>
 
         <Card>
-          <p className="text-[13px] font-semibold uppercase tracking-wide text-brand-dark">What happens next</p>
+          <p className="text-[16px] font-semibold text-ink">What happens next</p>
           <p className="mt-1 leading-relaxed">We’ll decide whether to take this forward within 30 days and tell you why, either way.</p>
         </Card>
 
@@ -45,7 +45,8 @@ export default function Receipt() {
 
         <div className="space-y-2.5">
           <Button full onClick={() => nav('/voice/ideas')}>See My Ideas</Button>
-          <Button full variant="outline" onClick={() => nav('/home')}>Back To Home</Button>
+          <Button full variant="outline" onClick={() => nav('/voice/new')}>Suggest Another Improvement</Button>
+          <Button full variant="quiet" onClick={() => nav('/home')}>Back To Home</Button>
         </div>
       </Screen>
     </>

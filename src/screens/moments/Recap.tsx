@@ -56,7 +56,7 @@ export default function Recap() {
 function List({ title, items, empty, tone }: { title: string; items: string[]; empty?: string; tone?: 'warn' }) {
   return (
     <div className="mb-3 last:mb-0">
-      <p className={`text-[13px] font-semibold uppercase tracking-wide ${tone === 'warn' ? 'text-warn' : 'text-brand-dark'}`}>{title}</p>
+      <p className={`text-[16px] font-semibold ${tone === 'warn' ? 'text-warn' : 'text-ink'}`}>{title}</p>
       {items.length ? <ul className="mt-1 list-disc space-y-0.5 pl-5">{items.map((i) => <li key={i}>{i}</li>)}</ul> : empty && <p className="mt-1 text-sm text-ink-soft">{empty}</p>}
     </div>
   );

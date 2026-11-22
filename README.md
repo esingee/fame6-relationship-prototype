@@ -22,7 +22,7 @@ npm run build    # type-checks, then builds to dist/
 npm run preview  # serve the built site locally
 ```
 
-Open the launcher at `/` and use **Reset Demo** to return to the seeded state at any time.
+The app opens on the demo sign-in. **Reset Demo** and the English/हिंदी toggle are in "Demo controls" at the bottom of the Home screen.
 
 ## Add the logo and the reference screenshot
 
@@ -32,7 +32,7 @@ Open the launcher at `/` and use **Reset Demo** to return to the seeded state at
 ## Demo scripts
 
 **A. Open Case Notes (about 75 s)**
-1. Launcher → scenario 1 → Sign In.
+1. Sign In → Home.
 2. Home → My Requests → "EMI paid but showing as due".
 3. Scroll: point at **What Happens Next** and the amber **Date Changed?** note.
 4. Tap "See how the bank's agent view works (demo)". Show internal vs customer split, tap **Approve & Publish**.
@@ -75,5 +75,5 @@ src/
   data/              types and seeded fixtures (cases, ideas, moments)
   i18n/strings.ts    English + Hindi (home and the three feature entry screens)
   state/             useDemoState (context + localStorage)
-  screens/           Launcher, SignIn, Home, cases/, voice/, moments/
+  screens/           SignIn, Home, cases/, voice/, moments/
 ```

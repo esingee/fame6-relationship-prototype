@@ -110,7 +110,7 @@ function TaskExtras({ id }: { id: string }) {
     return (
       <ul className="mt-3 space-y-2">
         {[['Rent', '₹18,000 · 1st of every month'], ['SIP', '₹5,000 · 5th of every month'], ['Electricity', 'Auto-pay · about ₹1,350']].map(([k, d]) => (
-          <li key={k} className="flex items-center gap-2 rounded-xl bg-app p-3">
+          <li key={k} className="flex items-center gap-2 rounded-xl bg-soft p-3">
             <span className="flex-1"><span className="block font-semibold">{k}</span><span className="text-xs text-ink-soft">{d}</span></span>
             {(['Keep', 'Change'] as const).map((o) => (
               <button key={o} type="button" aria-pressed={rec[k] === o} onClick={() => setRec((r) => ({ ...r, [k]: o }))} className={`min-h-[44px] rounded-full border px-3 text-sm font-medium ${rec[k] === o ? 'border-brand bg-brand text-white' : 'border-gray-300 bg-white'}`}>{o}</button>
@@ -124,7 +124,7 @@ function TaskExtras({ id }: { id: string }) {
     return (
       <div className="mt-3 space-y-2">
         {(Object.keys(ch) as (keyof typeof ch)[]).map((k) => (
-          <div key={k} className="flex items-center justify-between rounded-xl bg-app p-3">
+          <div key={k} className="flex items-center justify-between rounded-xl bg-soft p-3">
             <span className="font-medium">{k}</span>
             <Toggle on={ch[k]} onChange={(v) => setCh((c) => ({ ...c, [k]: v }))} label={`${k} alerts`} />
           </div>
@@ -141,7 +141,7 @@ function TaskExtras({ id }: { id: string }) {
     return (
       <ul className="mt-3 space-y-2">
         {[['Andheri West Branch', '1.2 km'], ['Powai Branch', '3.4 km'], ['Bandra Kurla Complex Branch', '5.1 km']].map(([n, d]) => (
-          <li key={n} className="flex items-center gap-3 rounded-xl bg-app p-3">
+          <li key={n} className="flex items-center gap-3 rounded-xl bg-soft p-3">
             <MapPin size={18} className="text-brand" aria-hidden />
             <span className="flex-1 font-medium">{n}</span>
             <span className="text-sm text-ink-soft">{d}</span>
