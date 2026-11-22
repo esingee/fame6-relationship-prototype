@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Landmark, ReceiptText, User, Wallet } from 'lucide-react';
+import { Home, IndianRupee, QrCode, Wallet, HandCoins } from 'lucide-react';
 import { ToastProvider, useToast } from './ui';
 import { useDemo } from '../state/useDemoState';
 import type { StringKey } from '../i18n/strings';
@@ -55,10 +55,10 @@ export function Screen({ children, nav, className = '' }: { children: ReactNode;
 
 const NAV: { key: StringKey; icon: typeof Home; to?: string }[] = [
   { key: 'nav.home', icon: Home, to: '/home' },
-  { key: 'nav.accounts', icon: Landmark },
-  { key: 'nav.pay', icon: Wallet },
-  { key: 'nav.requests', icon: ReceiptText, to: '/requests' },
-  { key: 'nav.profile', icon: User },
+  { key: 'nav.accounts', icon: Wallet },
+  { key: 'nav.pay', icon: IndianRupee },
+  { key: 'nav.loans', icon: HandCoins },
+  { key: 'nav.scan', icon: QrCode },
 ];
 
 export function BottomNav() {
